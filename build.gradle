@@ -1,0 +1,94 @@
+//defaultTasks 'clean','test','aggregate'
+
+buildscript {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath("net.serenity-bdd:serenity-gradle-plugin:3.2.5")
+    }
+}
+
+
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+    id 'java'
+    id 'eclipse'
+    id 'idea'
+    id "net.serenity-bdd.serenity-gradle-plugin" version "3.2.5"
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+
+    maven {
+        url "https://plugins.gradle.org/m2/"
+    }
+}
+
+
+
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+version = '1.0.2'
+group = 'org.gradle.sample'
+
+publishing {
+    publications {
+        library(MavenPublication) {
+            from components.java
+        }
+    }
+    repositories {
+        maven {
+            url = uri("${buildDir}/publishing-repository")
+        }
+    }
+}
+
+dependencies {
+    implementation "ch.qos.logback:logback-classic:1.2.11"
+
+    implementation 'net.serenity-bdd:serenity-core:3.2.5'
+    implementation 'net.serenity-bdd:serenity-screenplay:3.2.5'
+    implementation 'net.serenity-bdd:serenity-junit:3.2.5'
+    implementation 'net.serenity-bdd:serenity-screenplay-webdriver:3.2.5'
+    implementation "net.serenity-bdd:serenity-screenplay-rest:3.2.5"
+    implementation "net.serenity-bdd:serenity-ensure:3.2.5"
+    implementation 'net.serenity-bdd:serenity-cucumber:3.2.5'
+
+    implementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+    implementation 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+
+    implementation 'org.assertj:assertj-core:3.22.0'
+}
+
+test {
+    testLogging.showStandardStreams = true
+    systemProperties System.getProperties()
+}
+
+
+
+//serenity {
+//    // Specify the root package of any JUnit acceptance tests to appear in the Serenity report
+//    testRoot = "com.nat.mosaiq.qa"
+//    // Specify the root directory of any Cucumber feature files
+//    requirementsDir = "src/test/resources/features"
+//    requirementsBaseDir = "src/test/resources/features"
+//
+//
+//}
+
+gradle.startParameter.continueOnFailure = true
+
+test.finalizedBy(aggregate)
